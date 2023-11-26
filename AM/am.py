@@ -11,6 +11,7 @@ class AdaptiveMetropolis:
         self.iterations = iterations
         self.acceptance_count = 0
         self.samples = []
+        self.run()
 
     def propose_new_params(self):
         if len(self.samples) < self.t0:
@@ -43,6 +44,9 @@ class AdaptiveMetropolis:
 
             self.samples.append(self.current_params)
 
+        return np.array(self.samples)
+
+    def getOutput():
         return np.array(self.samples)
 
 def target_distribution(params):
