@@ -46,7 +46,7 @@ class AdaptiveMetropolis:
 
         return np.array(self.samples)
 
-    def getOutput():
+    def getOutput(self):
         return np.array(self.samples)
 
 def target_distribution(params):
@@ -56,37 +56,38 @@ def target_distribution(params):
     exponent = -0.5 * np.dot(np.dot((params - mean).T, inv_covariance), (params - mean))
     return np.exp(exponent) / (2 * np.pi * np.sqrt(np.linalg.det(covariance)))
 
-# Create an instance of AdaptiveMetropolis
-initial_params = [0, 0]
-sd = 0.1  # Scaling parameter
-epsilon = 1.0  # Parameter for the time-dependent covariance structure
-t0 = 100  # Time index for transition in covariance structure
-iterations = 500
-am_sampler = AdaptiveMetropolis(target_distribution, initial_params, sd, epsilon, t0, iterations)
+if __name__ == '__main__':
+    # Create an instance of AdaptiveMetropolis
+    initial_params = [0, 0]
+    sd = 0.1  # Scaling parameter
+    epsilon = 1.0  # Parameter for the time-dependent covariance structure
+    t0 = 100  # Time index for transition in covariance structure
+    iterations = 500
+    am_sampler = AdaptiveMetropolis(target_distribution, initial_params, sd, epsilon, t0, iterations)
 
-# Run the algorithm
-samples = am_sampler.run()
+    # Run the algorithm
+    samples = am_sampler.run()
 
-# Draw a single sample and print it
-single_sample = am_sampler.draw_sample()
-print("Single Sample:", single_sample)
+    # Draw a single sample and print it
+    single_sample = am_sampler.draw_sample()
+    print("Single Sample:", single_sample)
 
-# Visualize the target distribution and the obtained samples
-x, y = np.meshgrid(np.linspace(-5, 8, 100), np.linspace(-5, 8, 100))
-params = np.vstack([x.flatten(), y.flatten()]).T
-target_probs = np.array([target_distribution(p) for p in params]).reshape(100, 100)
+    # Visualize the target distribution and the obtained samples
+    x, y = np.meshgrid(np.linspace(-5, 8, 100), np.linspace(-5, 8, 100))
+    params = np.vstack([x.flatten(), y.flatten()]).T
+    target_probs = np.array([target_distribution(p) for p in params]).reshape(100, 100)
 
-plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(12, 6))
 
-# Plot the contour of the target distribution
-plt.subplot(1, 2, 1)
-plt.contour(x, y, target_probs, levels=20, cmap='viridis')
-plt.title('Target Distribution')
+    # Plot the contour of the target distribution
+    plt.subplot(1, 2, 1)
+    plt.contour(x, y, target_probs, levels=20, cmap='viridis')
+    plt.title('Target Distribution')
 
-# Plot the scatter plot of obtained samples
-plt.subplot(1, 2, 2)
-plt.scatter(samples[:, 0], samples[:, 1], alpha=0.5, label='Samples')
-plt.title('Samples from Adaptive Metropolis')
-plt.legend()
+    # Plot the scatter plot of obtained samples
+    plt.subplot(1, 2, 2)
+    plt.scatter(samples[:, 0], samples[:, 1], alpha=0.5, label='Samples')
+    plt.title('Samples from Adaptive Metropolis')
+    plt.legend()
 
-plt.show()
+    plt.show()
