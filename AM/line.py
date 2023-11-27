@@ -3,8 +3,11 @@ from am import AdaptiveMetropolis
 import os
 import sys
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-pro = 'D:\\Purdue III\\Stat ML\\Proposal\\Project\\HMC'
-sys.path.append(pro)
+parent_directory = os.path.dirname(current_directory)
+
+# Append the 'HMC' directory to the Python path
+hmc_directory = os.path.join(parent_directory, 'HMC')
+sys.path.append(hmc_directory)
 sys.path.append(project_root)
 from scipy.optimize import minimize
 import scipy.stats as stats
