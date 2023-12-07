@@ -1,6 +1,6 @@
 import tensorflow as tf
 import tensorflow_probability as tfp
-from TrueDistributions import *
+from HMC.TrueDistributions import *
 
 class HamiltonianChainMaker:
     def __init__(self, dist: MVN,n=10**4,step_size=1.0) -> None:

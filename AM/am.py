@@ -50,8 +50,8 @@ class AdaptiveMetropolis:
         return np.array(self.samples)
 
 def target_distribution(params):
-    mean = np.array([2, 3])
-    covariance = np.array([[1, 0.5], [0.5, 2]])
+    mean = np.array([0, 0])
+    covariance = np.array([[5, 1], [0, 1]])
     inv_covariance = np.linalg.inv(covariance)
     exponent = -0.5 * np.dot(np.dot((params - mean).T, inv_covariance), (params - mean))
     return np.exp(exponent) / (2 * np.pi * np.sqrt(np.linalg.det(covariance)))
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     print("Single Sample:", single_sample)
 
     # Visualize the target distribution and the obtained samples
-    x, y = np.meshgrid(np.linspace(-5, 8, 100), np.linspace(-5, 8, 100))
+    x, y = np.meshgrid(np.linspace(-5, 5, 100), np.linspace(-5, 5, 100))
     params = np.vstack([x.flatten(), y.flatten()]).T
     target_probs = np.array([target_distribution(p) for p in params]).reshape(100, 100)
 
