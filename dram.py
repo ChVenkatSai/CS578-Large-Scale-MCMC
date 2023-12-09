@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 class DRAM:
-    def __init__(self, target_distribution, initial_params, iterations, adaptation_interval, sd=0.1, epsilon=1e-6):
+    def __init__(self, target_distribution, initial_params, iterations, adaptation_interval=200, sd=0.1, epsilon=1e-6):
         self.target_distribution = target_distribution
         self.current_params = np.array(initial_params)
         self.iterations = iterations
@@ -59,42 +59,43 @@ class DRAM:
 
         return np.array(self.samples)
 
+if __name__ == "__main__":
 
-# Example target distribution: a 2D Gaussian
-def target_distribution(params):
-    mean = np.array([2, 3])
-    covariance = np.array([[1, 0.5], [0.5, 2]])
-    inv_covariance = np.linalg.inv(covariance)
-    exponent = -0.5 * np.dot((params - mean), np.dot(inv_covariance, (params - mean)))
-    return np.exp(exponent) / (2 * np.pi * np.sqrt(np.linalg.det(covariance)))
+    # Example target distribution: a 2D Gaussian
+    def target_distribution(params):
+        mean = np.array([2, 3])
+        covariance = np.array([[1, 0.5], [0.5, 2]])
+        inv_covariance = np.linalg.inv(covariance)
+        exponent = -0.5 * np.dot((params - mean), np.dot(inv_covariance, (params - mean)))
+        return np.exp(exponent) / (2 * np.pi * np.sqrt(np.linalg.det(covariance)))
 
-# Create an instance of DelayedRejectionMCMC
-initial_params = [0, 0]
-iterations = 500
-t0 = 100
-dram_sampler = DRAM(target_distribution, initial_params, iterations, t0)
+    # Create an instance of DelayedRejectionMCMC
+    initial_params = [0, 0]
+    iterations = 500
+    t0 = 100
+    dram_sampler = DRAM(target_distribution, initial_params, iterations, t0)
 
-# Run the algorithm
-samples = dram_sampler.run()
+    # Run the algorithm
+    samples = dram_sampler.run()
 
-# The 'samples' variable now contains the samples from the Delayed Rejection MCMC run
-# Draw a single sample and print it
-single_sample = dram_sampler.draw_sample()
-print("Single Sample:", single_sample)
+    # The 'samples' variable now contains the samples from the Delayed Rejection MCMC run
+    # Draw a single sample and print it
+    single_sample = dram_sampler.draw_sample()
+    print("Single Sample:", single_sample)
 
-# # Visualize the target distribution and the obtained samples
-x, y = np.meshgrid(np.linspace(-5, 8, 100), np.linspace(-5, 8, 100))
-params_grid = np.vstack([x.ravel(), y.ravel()]).T
-target_probs = np.array([target_distribution(p) for p in params_grid]).reshape(x.shape)
+    # # Visualize the target distribution and the obtained samples
+    x, y = np.meshgrid(np.linspace(-5, 8, 100), np.linspace(-5, 8, 100))
+    params_grid = np.vstack([x.ravel(), y.ravel()]).T
+    target_probs = np.array([target_distribution(p) for p in params_grid]).reshape(x.shape)
 
-# Create the plot
-plt.figure(figsize=(12, 6))
+    # Create the plot
+    plt.figure(figsize=(12, 6))
 
-# Combine the contour and scatter plot
-plt.contour(x, y, target_probs, levels=20, cmap='viridis')  # Contour plot for the target distribution
-plt.scatter(samples[:, 0], samples[:, 1], alpha=0.5, label='Samples', color='orange')  # Scatter plot for the samples
-plt.title('Target Distribution and Samples')
-plt.legend()
-plt.grid(True)
+    # Combine the contour and scatter plot
+    plt.contour(x, y, target_probs, levels=20, cmap='viridis')  # Contour plot for the target distribution
+    plt.scatter(samples[:, 0], samples[:, 1], alpha=0.5, label='Samples', color='orange')  # Scatter plot for the samples
+    plt.title('Target Distribution and Samples')
+    plt.legend()
+    plt.grid(True)
 
-plt.show()
+    plt.show()
