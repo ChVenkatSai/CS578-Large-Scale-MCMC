@@ -18,7 +18,7 @@ class HamiltonianChainMaker:
 
     def createSamples(self):    
         # Initialize the HMC transition kernel.
-        num_burnin_steps = self.n//20
+        num_burnin_steps = self.n//10
         adaptive_hmc = tfp.mcmc.SimpleStepSizeAdaptation(
             tfp.mcmc.HamiltonianMonteCarlo(
                 target_log_prob_fn=self.unnormalized_log_prob,
@@ -33,7 +33,7 @@ class HamiltonianChainMaker:
             samples, is_accepted = tfp.mcmc.sample_chain(
                 num_results=n,
                 num_burnin_steps=num_burnin_steps,
-                current_state=[tf.cast([1,0], dtype=tf.float32)],
+                current_state=[tf.cast([np.random.random(1)[0] for i in range(self.dist.getMean().shape[0])], dtype=tf.float32)],
                 kernel=adaptive_hmc,
                 trace_fn=lambda _, pkr: pkr.inner_results.is_accepted)
 
@@ -49,7 +49,7 @@ class HamiltonianChainMaker:
         self.acceptance_rate = tf.reduce_mean(tf.cast(is_accepted, dtype=tf.float32))
     
     def getOutput(self):
-        return self.output[self.is_accepted]
+        return self.output
     
     def getAcceptanceRate(self):
         return self.acceptance_rate
